@@ -1,0 +1,53 @@
+# Build output
+build/
+Build/
+Debug/
+Release/
+x64/
+Win32/
+out/
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.db
+*.opendb
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# IDE
+.vscode/
+*.code-workspace
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+*.obj
+*.o
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.pdb
+*.ilk
+*.exp
+
+# Configuration & logs (user-specific)
+config.ini
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
