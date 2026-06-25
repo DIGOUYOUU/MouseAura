@@ -1,4 +1,4 @@
-# MouseHighlighter
+# MouseAura
 
 一个极轻量级的 Windows 桌面鼠标高亮工具，使用 C++17 + Win32 API 编写。通过全屏透明叠加层，在鼠标光标周围渲染半透明光晕圆圈和点击波纹动画，方便演示、录屏、教学等场景下突出显示鼠标操作。
 
@@ -34,7 +34,7 @@
 ## 项目结构
 
 ```
-MouseHighlighter/
+MouseAura/
 ├── include/
 │   ├── MouseHighlighter.h      # 主应用类声明
 │   ├── SharedState.h           # 无锁环形队列与线程间通信
@@ -46,7 +46,6 @@ MouseHighlighter/
 │   └── Config.cpp              # INI 文件解析器
 ├── res/                        # 资源目录（预留）
 ├── CMakeLists.txt              # CMake 构建脚本
-├── BUILD.md                    # 详细构建指南
 └── README.md                   # 本文件
 ```
 
@@ -68,7 +67,7 @@ cmake -G "Visual Studio 17 2022" -A x64 ..
 cmake --build . --config Release
 ```
 
-编译产物位于 `build/Release/MouseHighlighter.exe`。
+编译产物位于 `build/Release/MouseAura.exe`。
 
 **MinGW：**
 
@@ -78,9 +77,11 @@ cmake -G "MinGW Makefiles" ..
 cmake --build .
 ```
 
+编译产物位于 `build/MouseAura.exe`。
+
 ### 运行
 
-双击 `MouseHighlighter.exe` 即可。程序启动后会在系统托盘显示图标，ESC 键可退出。
+双击 `MouseAura.exe` 即可。程序启动后会在系统托盘显示图标，ESC 键可退出。
 
 ## 托盘菜单
 
@@ -91,8 +92,8 @@ cmake --build .
 | 光晕颜色 | 蓝色 / 黄色 |
 | 光晕大小 | S / M / L / XL / XXL |
 | 光晕透明度 | 低 / 中 / 高 |
-| 光晕质量 | 普通 / 高 / 极高（SSAA 级别） |
-| 实心填充 | 切换空心圆环 / 实心圆 |
+| 光晕画质 | 普通 / 高清 / 超清（SSAA 级别） |
+| 实心圆 | 切换空心圆环 / 实心圆 |
 | 波纹颜色 | 绿 / 蓝 / 粉 |
 | 波纹大小 | S / M / L / XL / XXL |
 | 波纹透明度 | 低 / 中 / 高 |
@@ -103,7 +104,7 @@ cmake --build .
 
 ## 配置文件
 
-配置自动保存在 `%APPDATA%\MouseHighlighter\config.ini`，格式如下：
+配置自动保存在 `%APPDATA%\MouseAura\config.ini`，格式如下：
 
 ```ini
 [Halo]

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(MouseHighlighter CXX)
+project(MouseAura CXX)
 
 # ============================================================
 # 设置 C++ 标准
@@ -16,6 +16,7 @@ set(SOURCES
     src/main.cpp
     src/MouseHighlighter.cpp
     src/Config.cpp
+    res/app.rc
 )
 
 set(HEADERS
@@ -28,19 +29,19 @@ set(HEADERS
 # ============================================================
 # 可执行文件
 # ============================================================
-add_executable(MouseHighlighter WIN32 ${SOURCES} ${HEADERS})
+add_executable(MouseAura WIN32 ${SOURCES} ${HEADERS})
 
 # ============================================================
 # 包含目录
 # ============================================================
-target_include_directories(MouseHighlighter PRIVATE
+target_include_directories(MouseAura PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # ============================================================
 # 链接库
 # ============================================================
-target_link_libraries(MouseHighlighter
+target_link_libraries(MouseAura
     user32
     gdi32
     kernel32
@@ -49,14 +50,14 @@ target_link_libraries(MouseHighlighter
     psapi
 )
 
-target_compile_definitions(MouseHighlighter PRIVATE UNICODE _UNICODE)
+target_compile_definitions(MouseAura PRIVATE UNICODE _UNICODE)
 
 # ============================================================
 # 编译选项
 # ============================================================
 if(MSVC)
     # Visual Studio 编译选项
-    target_compile_options(MouseHighlighter PRIVATE
+    target_compile_options(MouseAura PRIVATE
         /Zc:inline          # 移除不使用的代码
         /Zc:wchar_t         # wchar_t 是内置类型
         /Zc:forScope        # for 循环作用域
@@ -69,12 +70,12 @@ endif()
 # 运行时
 # ============================================================
 if(MSVC)
-    set_property(TARGET MouseHighlighter PROPERTY MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+    set_property(TARGET MouseAura PROPERTY MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif()
 
 # ============================================================
 # 优化选项 (Release 模式)
 # ============================================================
 if(CMAKE_BUILD_TYPE MATCHES Release)
-    target_compile_options(MouseHighlighter PRIVATE /Ox)
+    target_compile_options(MouseAura PRIVATE /Ox)
 endif()

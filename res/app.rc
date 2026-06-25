@@ -1,0 +1,5 @@
+// MouseAura 应用资源文件
+#include <windows.h>
+
+// 应用图标
+IDR_ICON ICON "app.ico"

@@ -21,6 +21,7 @@ MouseHighlighter* MouseHighlighter::s_pInstance = nullptr;
 
 // 托盘图标 ID
 #define ID_TRAY_ICON 1001
+#define IDR_ICON 100
 #define IDM_EXIT 2001
 #define IDM_COLOR_BLUE 2002
 #define IDM_COLOR_YELLOW 2003
@@ -760,58 +761,11 @@ void MouseHighlighter::UpdateLayeredWindowOutput(const RECT& updateRect) {
 
 bool MouseHighlighter::SetupTrayIcon() {
     wmTaskbarCreated = RegisterWindowMessage(L"TaskbarCreated");
-    
-    // 创建自定义图标 (彩色圆形，与光晕效果统一)
-    // 使用 LoadIcon + IDI_APPLICATION 作为后备
-    HICON hIcon = nullptr;
-    
-    // 按系统小图标尺寸创建图标（高 DPI 下更清晰）
-    int iconW = std::max(16, GetSystemMetrics(SM_CXSMICON));
-    int iconH = std::max(16, GetSystemMetrics(SM_CYSMICON));
 
-    HDC hdcScreen = GetDC(nullptr);
-    HDC hdcMem = CreateCompatibleDC(hdcScreen);
-    HBITMAP hbm = CreateCompatibleBitmap(hdcScreen, iconW, iconH);
-    
-    if (hdcMem && hbm) {
-        HBITMAP hOldBm = (HBITMAP)SelectObject(hdcMem, hbm);
-        
-        // 背景透明 (白色)
-        RECT rc = {0, 0, iconW, iconH};
-        FillRect(hdcMem, &rc, (HBRUSH)GetStockObject(WHITE_BRUSH));
-        
-        // 绘制蓝紫色圆形
-        int penWidth = std::max(1, iconW / 8);
-        HPEN hPen = CreatePen(PS_SOLID, penWidth, RGB(100, 150, 255));
-        HBRUSH hBrush = CreateSolidBrush(RGB(150, 100, 255));
-        HPEN hOldPen = (HPEN)SelectObject(hdcMem, hPen);
-        HBRUSH hOldBrush = (HBRUSH)SelectObject(hdcMem, hBrush);
-        
-        int margin = std::max(2, iconW / 8);
-        Ellipse(hdcMem, margin, margin, iconW - margin, iconH - margin);
-        
-        SelectObject(hdcMem, hOldBrush);
-        SelectObject(hdcMem, hOldPen);
-        DeleteObject(hBrush);
-        DeleteObject(hPen);
-        SelectObject(hdcMem, hOldBm);
-        
-        // 从位图创建图标
-        ICONINFO ii = {};
-        ii.fIcon = TRUE;
-        ii.xHotspot = iconW / 2;
-        ii.yHotspot = iconH / 2;
-        ii.hbmMask = hbm;
-        ii.hbmColor = hbm;
-        hIcon = CreateIconIndirect(&ii);
-    }
-    
-    // 清理资源
-    if (hbm) DeleteObject(hbm);
-    if (hdcMem) DeleteDC(hdcMem);
-    if (hdcScreen) ReleaseDC(nullptr, hdcScreen);
-    
-    // 后备方案
+    // 从资源加载图标
+    HICON hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDR_ICON));
+
+    // 后备方案：如果资源加载失败，使用系统默认图标
     if (!hIcon) {
         hIcon = LoadIcon(nullptr, IDI_APPLICATION);
     }
@@ -1346,31 +1300,6 @@ int MouseHighlighter::Run() {
         if (waitResult == WAIT_TIMEOUT) {
             POINT pt{};
             if (GetCursorPos(&pt)) {
-                // 全屏游戏时可能发生 DPI 或分辨率变化，确保窗口跟随鼠标所在显示器
-                HMONITOR hMon = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
-                if (hMon) {
-                    MONITORINFOEXW mi = {};
-                    mi.cbSize = sizeof(mi);
-                    if (GetMonitorInfoW(hMon, (MONITORINFO*)&mi)) {
-                        // 如果窗口位置/大小与当前显示器工作区不匹配，重新定位窗口
-                        RECT winRect;
-                        GetWindowRect(hLayeredWindow, &winRect);
-                        if (winRect.left != mi.rcMonitor.left || winRect.top != mi.rcMonitor.top ||
-                            winRect.right != mi.rcMonitor.right || winRect.bottom != mi.rcMonitor.bottom) {
-                            SetWindowPos(
-                                hLayeredWindow,
-                                HWND_TOPMOST,
-                                mi.rcMonitor.left,
-                                mi.rcMonitor.top,
-                                mi.rcMonitor.right - mi.rcMonitor.left,
-                                mi.rcMonitor.bottom - mi.rcMonitor.top,
-                                SWP_SHOWWINDOW | SWP_NOACTIVATE
-                            );
-                            dirtyRectTracker.screenWidth = mi.rcMonitor.right - mi.rcMonitor.left;
-                            dirtyRectTracker.screenHeight = mi.rcMonitor.bottom - mi.rcMonitor.top;
-                        }
-                    }
-                }
                 sharedState.cursorX.store(pt.x, std::memory_order_release);
                 sharedState.cursorY.store(pt.y, std::memory_order_release);
             }

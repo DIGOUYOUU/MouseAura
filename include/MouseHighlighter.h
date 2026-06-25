@@ -129,8 +129,8 @@ private:
     float smoothedY = 0.0f;
     
     // ===== 窗口类名 =====
-    static constexpr wchar_t WINDOW_CLASS_NAME[] = L"MouseHighlightWindow";
-    static constexpr wchar_t APP_NAME[] = L"MouseHighlighter";
+    static constexpr wchar_t WINDOW_CLASS_NAME[] = L"MouseAuraWindow";
+    static constexpr wchar_t APP_NAME[] = L"MouseAura";
     
     // ===== 内部方法 =====
     
