@@ -15,7 +15,9 @@
 
 ## 截图示意
 
-![image-20260625232636390](C:\Users\20749\AppData\Roaming\Typora\typora-user-images\image-20260625232636390.png)![image-20260625232724683](C:\Users\20749\AppData\Roaming\Typora\typora-user-images\image-20260625232724683.png)
+![image-20260625232724683](src\show1.png)
+
+![show2](src\show2.png)
 
 ## 项目结构
 
